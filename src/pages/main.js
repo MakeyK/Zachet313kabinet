@@ -5,112 +5,94 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 
 const MainPage = observer(() => {
-  document.body.style.backgroundColor = "#313131"
-  const [formData, setFormData] = useState({
-    name: '',
-    phone: '',
-    number1: '',
-    time: '',
-    checkbox: '',
-    checkbox1: ''
-  });
-  const [nameError, setNameError] = useState();
-  const [phoneError, setPhoneError] = useState();
-  const [number1Error, setNumber1Error] = useState();
-  const [timeError, setTimeError] = useState();
-  const [checkboxError, setCheckboxError] = useState();
-  
-  useEffect(() => {
-    if (formData.name === '' || formData.phone === '' || formData.number1 === '' || formData.time === '' || formData.checkbox === '') {
-      return ;
+  document.body.style.backgroundColor = "#808080"
+  const predictions = [
+    {
+      title: 'Большая удача',
+      health: 'В ближайший месяц ожидается прилив сил.',
+      business: 'Скоро все вопросы с незаконченными делами решатся, и вы получите возможность сосредоточиться на прибыльном проекте.',
+      relationships: 'Близкие и друзья будут очень нуждаться в вашей поддержке, и вы её окажете.'
+    },
+    {
+      title: 'Неудача',
+      health: 'Возможно, вам стоит обратить внимание на своё здоровье и не игнорировать симптомы.',
+      business: 'Некоторые проекты могут оказаться невыгодными, будьте осторожны с инвестициями.',
+      relationships: 'Конфликты с близкими могут возникнуть, постарайтесь быть терпимее.'
+    },
+    {
+      title: 'Здоровье пострадает',
+      health: 'Придется походить по врачам',
+      business: 'Вам на утро придет позитивная новость',
+      relationships: 'Остануться как есть'
+    },
+    {
+      title: 'Переживёте всё',
+      health: 'Но всё закончится прекрасно, как дальше жить вам будет ясно!',
+      business: 'У тебя много личных талантов, которые нравятся другим',
+      relationships: 'Вас ждет немало приятных и запоминающихся моментов'
+    },
+    {
+      title: 'Спокойствия и только',
+      health: 'Если тачку — то крутую, если денег — то зеленых.',
+      business: 'Плывите по течению жизни без оценок и попыток понять ее.',
+      relationships: 'Ваши романтические мечты сбудутся!'
+    },
+    {
+      title: 'Победа за вами',
+      health: 'Пусть в жизни все проходит мимо, кроме здоровья, денег!',
+      business: 'Ваша цель достижима.',
+      relationships: 'Дом будет самым уютным местом'
+    },
+    {
+      title: 'Мотивация',
+      health: 'Самое смешное желание — это нравиться всем',
+      business: 'Вы много добьетесь, если возьмете все в свои руки',
+      relationships: 'Ждите необычного признания в любви'
+    },
+    {
+      title: 'Сосредоточится',
+      health: 'Не стоит тратить время и силы на мелочи, нужно думать о главном.',
+      business: 'Не оставляйте усилий и получите желаемое',
+      relationships: 'Романтика переместит вас в новом направлении.'
     }
-  });
+];
+
+  const [count, setDrawCount] = useState(0);
+  const [selectedPrediction, setSelectedPrediction] = useState();
+
+  const Prediction = () => {
+    if (count < 3) {
+      const randomIndex = Math.floor(Math.random() * predictions.length);
+      setSelectedPrediction(predictions[randomIndex]);
+      setDrawCount(count + 1);
+    }
+  };
 
 
-  const Submit = (e) => {
-    // Метод обьекта, для отмены действия браузера по умолчанию, связанного с определённым событием. Отменить переход по ссылке при клике на неё
-    e.preventDefault();
-    setNameError(formData.name === '');
-    setPhoneError(formData.phone === '');
-    setNumber1Error(formData.number1 === '');
-    setTimeError(formData.time === '');
-    setCheckboxError(formData.checkbox === '')}
-    
-
-  const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    setFormData({
-      [name]: type === 'checkbox' ? checked : value,
-      [name]: type === 'checkbox1' ? checked : value,
-    })};
 
   return (
     <Container
-      style={{ backgroundColor: '#313131', borderRadius: '15px', width: '1240px', marginTop: '6px', fontFamily: "Play" }}>
-      <Card style={{ borderRadius: 80, fontFamily: "Play", backgroundColor: '#3E3E3E', marginTop: '60px' }} className="p-5 #FFFAF4">
-        <Form className="d-flex flex-column" onSubmit={Submit}>
-          <Form.Control
-            style={{ borderRadius: 70, backgroundColor: '#7F933A', height: 71, border: "1px solid", fontSize: "24px", marginBottom: '20px' }}
-            className="mt-3"
-            type="name"
-            placeholder="Введите имя..."
-            size="lg"
-            maxLength={8}
-            onChange={(e) => setFormData({ name: e.target.value })} />
-          {nameError && <p style={{ color: 'red' }}>Поле не может быть пустым</p>}
-          <Form.Control
-            style={{ borderRadius: 70, backgroundColor: '#7F933A', height: 71, border: "1px solid", fontSize: "24px", marginBottom: '20px' }}
-            className="mt-3"
-            type="phone"
-            minLength={5}
-            placeholder="Выберите опцию..."
-            size="lg"
-            // Это обработчик изменения значения для поля телефона в форме. 
-            // Он позволяет обновлять состояние formData при изменении значения этого поля.
-            onChange={(e) => setFormData({ phone: e.target.value })} />
-          {phoneError && <p style={{ color: 'red' }}>Поле не может быть пустым</p>}
-          <Form.Control
-            style={{ borderRadius: 70, backgroundColor: '#7F933A', height: 71, border: "1px solid", fontSize: "24px", marginBottom: '20px' }}
-            className="mt-3"
-            placeholder="Введите число..."
-            size="lg"
-            type="number"
-            onChange={(e) => setFormData({ number1: e.target.value })} />
-          {number1Error && <p style={{ color: 'red' }}>Поле не может быть пустым</p>}
-    
-          <Form.Control
-            style={{ borderRadius: 70, backgroundColor: '#7F933A', height: 71, border: "1px solid", fontSize: "24px", marginBottom: '20px', width:'340px'}}
-            className="mt-3"
-            type="time"
-            placeholder="Выберите время..."
-            size="lg"
-            onChange={(e) => setFormData({ time: e.target.value })} />
-          {timeError && <p style={{ color: 'red' }}>Вам нужно выбрать время</p>}
-
-          <div style={{ borderRadius: 70, width:'340px', backgroundColor: '#7F933A', height: 71, border: "1px solid", fontSize: "24px", marginBottom: '20px' }}> 
-                    <label> 
-                        <strong style={{marginLeft:'40px'}}>Мультивыбор...</strong> 
-                      <input
-                      style={{width:'100px', height:'35px', marginTop: '15px'}}
-                      type="checkbox" 
-                      name="checkbox" 
-                      checked={formData.checkbox} 
-                      onChange={handleChange}/>
-                  </label></div>
-          {checkboxError && <p style={{ color: 'red' }}>Подумайте.. и выберите</p>}
-
-          <p style={{ marginTop: '30px', display: 'flex', justifyContent: 'center' }}>
+      style={{ backgroundColor: '#808080', borderRadius: '15px', width: '1000px', marginTop: '6px', fontFamily: "Play" }}>
             <Button
               type="submit"
               size={"lg"}
-              onChange={Submit}
-              variant={"outline-success"}
-              style={{ fontWeight: 'bold', borderRadius: 37, width: '180px', height: '70px' }}
-            >
-              Отправить
-            </Button></p>
-        </Form>
-      </Card>
+              onClick={Prediction}
+              variant={"btn btn-danger"}
+              style={{ fontWeight: 'bold', borderRadius: 10, width: '180px', height: '80px', position:'absolute', marginLeft: '400px', marginTop:'550px'}}>
+              {count === 0 ? 'Вытянуть предсказание' : 'Ещё один шанс'}
+            </Button>      
+      {selectedPrediction && (
+          <Card style={{ borderRadius: 40, fontFamily: "Play", backgroundColor: '#D3D3D3', marginTop: '60px', border:'3px solid' }} className="p-5 #FFFAF4 text-center">
+            <h1 style={{fontWeight:'bold', textDecoration:'underline'}}>{selectedPrediction.title}</h1>
+            <Card.Body>
+              <Card.Text><p style={{fontWeight:'bold'}}>Здоровье:</p> {selectedPrediction.health}</Card.Text>
+              <hr />
+              <Card.Text><p style={{fontWeight:'bold'}}>Бизнес:</p> {selectedPrediction.business}</Card.Text>
+              <hr />
+              <Card.Text><p style={{fontWeight:'bold'}}>Отношения:</p> {selectedPrediction.relationships}</Card.Text>
+            </Card.Body>
+          </Card>
+      )}
 
     </Container>
   );
