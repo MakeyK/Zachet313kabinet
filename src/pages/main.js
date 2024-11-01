@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { observer } from "mobx-react-lite";
-import { Card, Container, Form, Button } from 'react-bootstrap';
+import { Card, Container, Button } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 
@@ -56,18 +56,37 @@ const MainPage = observer(() => {
       relationships: 'Романтика переместит вас в новом направлении.'
     }
 ];
+    const [isCardVisible, setCardVisible] = useState(false);
 
-  const [count, setDrawCount] = useState(0);
-  const [selectedPrediction, setSelectedPrediction] = useState();
+  const [prediction2, setPrediction2] = useState('');
+  const [prediction, setPrediction] = useState('');
+  const [buttonText, setButtonText] = useState("Вытянуть предсказание");
+  const [disabled, setDisabled] = useState(false);
 
-  const Prediction = () => {
-    if (count < 3) {
-      const randomIndex = Math.floor(Math.random() * predictions.length);
-      setSelectedPrediction(predictions[randomIndex]); // Здесь обновляется состояние predictions выбранного по случайному индексу.
-      setDrawCount(count + 1);
+  const Click = () => {
+    
+    if (buttonText === "Вытянуть предсказание") {
+      if(setPrediction === '') {
+        const randomIndex = Math.floor(Math.random() * predictions.length);
+        setPrediction(predictions[randomIndex]);
+      }
+      else {
+        setPrediction2()
+        const randomIndex = Math.floor(Math.random() * predictions.length);
+        setPrediction(prev => ({ ...predictions[randomIndex], prevPrediction: prev }));
+
+        setButtonText("Уже достаточно");
+      }
+    } else if (buttonText === "Ещё один шанс") {
+
+        const randomIndex = Math.floor(Math.random() * predictions.length);
+        setPrediction(prev => ({ ...predictions[randomIndex], prevPrediction: prev }));
+
+        setButtonText("Уже достаточно");
+        setDisabled(true);
     }
-  };
-
+    setCardVisible(!isCardVisible);
+};
 
 
   return (
@@ -76,24 +95,38 @@ const MainPage = observer(() => {
             <Button
               type="submit"
               size={"lg"}
-              onClick={Prediction}
+              onClick={Click}
               variant={"btn btn-danger"}
-              style={{ fontWeight: 'bold', borderRadius: 10, width: '180px', height: '80px', position:'absolute', marginLeft: '400px', marginTop:'550px'}}>
-              {count === 0 ? 'Вытянуть предсказание' : 'Ещё один шанс'}
-            </Button>      
-      {selectedPrediction && (
-          <Card style={{ borderRadius: 40, fontFamily: "Play", backgroundColor: '#D3D3D3', marginTop: '60px', border:'3px solid' }} className="p-5 #FFFAF4 text-center">
-            <h1 style={{fontWeight:'bold', textDecoration:'underline'}}>{selectedPrediction.title}</h1>
+              disabled={disabled}
+              style={{ fontWeight: 'bold', borderRadius: 10, width: '180px', height: '80px', display:'flex', justifyContent:'center'}}>
+                {buttonText}
+            </Button>
+
+      {prediction && (
+        <Card style={{ borderRadius: 40, fontFamily: "Play", backgroundColor: '#D3D3D3', marginTop: '60px', border:'3px solid' }} className="p-5 #FFFAF4 text-center">
+            <h1 style={{fontWeight:'bold', textDecoration:'underline'}}>{prediction.title}</h1>
             <Card.Body>
-              <Card.Text><p style={{fontWeight:'bold'}}>Здоровье:</p> {selectedPrediction.health}</Card.Text>
+              <Card.Text><p style={{fontWeight:'bold'}}>Здоровье:</p> {prediction.health}</Card.Text>
               <hr />
-              <Card.Text><p style={{fontWeight:'bold'}}>Бизнес:</p> {selectedPrediction.business}</Card.Text>
+              <Card.Text><p style={{fontWeight:'bold'}}>Бизнес:</p> {prediction.business}</Card.Text>
               <hr />
-              <Card.Text><p style={{fontWeight:'bold'}}>Отношения:</p> {selectedPrediction.relationships}</Card.Text>
+              <Card.Text><p style={{fontWeight:'bold'}}>Отношения:</p> {prediction.relationships}</Card.Text>
             </Card.Body>
           </Card>
       )}
 
+    {prediction2 && (
+        <Card style={{ borderRadius: 40, fontFamily: "Play", backgroundColor: '#D3D3D3', marginTop: '60px', border:'3px solid' }} className="p-5 #FFFAF4 text-center">
+            <h1 style={{fontWeight:'bold', textDecoration:'underline'}}>{prediction.title}</h1>
+            <Card.Body>
+              <Card.Text><p style={{fontWeight:'bold'}}>Здоровье:</p> {prediction.health}</Card.Text>
+              <hr />
+              <Card.Text><p style={{fontWeight:'bold'}}>Бизнес:</p> {prediction.business}</Card.Text>
+              <hr />
+              <Card.Text><p style={{fontWeight:'bold'}}>Отношения:</p> {prediction.relationships}</Card.Text>
+            </Card.Body>
+          </Card>
+      )}
     </Container>
   );
 }
