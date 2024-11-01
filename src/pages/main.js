@@ -63,7 +63,7 @@ const MainPage = observer(() => {
   const Prediction = () => {
     if (count < 3) {
       const randomIndex = Math.floor(Math.random() * predictions.length);
-      setSelectedPrediction(predictions[randomIndex]);
+      setSelectedPrediction(predictions[randomIndex]); // Здесь обновляется состояние predictions выбранного по случайному индексу.
       setDrawCount(count + 1);
     }
   };
